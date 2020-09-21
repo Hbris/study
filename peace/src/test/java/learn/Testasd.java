@@ -1,10 +1,10 @@
-import com.jiang.cloud_demo.entity.TranslateResult;
-import lombok.Data;
+package learn;
+
+import com.jiang.advances.peace.entity.TranslateResult;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -220,18 +220,5 @@ public class Testasd {
         title.set(0);
         System.out.println(title.get());
     }
-}
-
-
-@Data
-class BookMake{
-    AtomicInteger title = new AtomicInteger(0);
-    AtomicInteger mark = new AtomicInteger(0);
-
-    public void titleAdd(int i) {
-        title.addAndGet(i);
-        mark.set(0);
-    }
-
 }
 

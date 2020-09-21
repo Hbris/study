@@ -1,3 +1,5 @@
+package learn;
+
 import org.junit.jupiter.api.Test;
 
 import java.sql.Time;
