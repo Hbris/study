@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Testasd {
     @Test
     public void a() throws IOException {
-        String line = "<spring:message code = ' ' text = '序号'/>";
+        String line = "<spring:message code='2223' text = '序号'/>";
         String newLine = line;
         int start = line.indexOf("<spring:message");
         int end = line.indexOf("/>", start);
@@ -48,10 +48,18 @@ public class Testasd {
             translate.setPreCode(code);
 
             boolean flag = true;
-            if (code.isBlank()) {
+            if (flag) {
+                //if (code.isBlank()) {
+
 
 
                 int nc = newLine.indexOf("code", start + 1);
+
+                int split1 = newLine.indexOf(codeSplit,nc);
+                int split2 = newLine.indexOf(codeSplit,split1+1);
+
+                String p = newLine.substring(nc,split2 + 1);
+                System.out.println(newLine.replace(p, "code = " + codeSplit + "aass11111" + codeSplit));
 
                 //newLine.char
 
@@ -67,7 +75,7 @@ public class Testasd {
 
     }
 
-    @org.junit.Test
+    @Test
     public void b() throws IOException  {
         String pro = "E:\\文档\\20200911\\后端\\gjh\\java\\messages_zh_CN.properties";
         Properties translate =

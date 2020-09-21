@@ -135,21 +135,25 @@ public class Translate {
 
                         int codeStart = target.indexOf("code=") + 6;
 
+                        char codeSplit = target.charAt(codeStart- 1);
                         int codeEnd = target.indexOf(target.charAt(codeStart- 1), codeStart);
                         //System.out.println(target);
 
                         String code = target.substring(codeStart, codeEnd);
 
                         translate.setPreCode(code);
-                        boolean flag = true;
-                        if (code.isBlank()) {
-                            char codeSplit = target.charAt(codeStart- 1);
-                            flag = false;
-                        }
+
+                        int nc = newLine.indexOf("code", start + 1);
+
+                        int split1 = newLine.indexOf(codeSplit,nc);
+                        int split2 = newLine.indexOf(codeSplit,split1+1);
+
+                        String p = newLine.substring(nc,split2 + 1);
+                        System.out.println();
 
                         if (resMap.containsKey(text)) {
                             translate.setAftCode(resMap.get(text));
-                            newLine = newLine.replace(code, resMap.get(text));
+                            newLine = newLine.replace(p, "code = " + codeSplit + resMap.get(text) + codeSplit);
                         } else {
                             un.add(line);
                         }
