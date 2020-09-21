@@ -15,3 +15,4 @@ public class MergeController {
         return Translate.merge();
     }
 }
+
