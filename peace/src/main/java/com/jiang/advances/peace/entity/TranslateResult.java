@@ -15,4 +15,9 @@ public class TranslateResult {
     public  String preCode;
     @Excel(name = "替换后code", width = 20)
     public  String aftCode;
+
+    @Excel(name = "失败原因", width = 20)
+    public  String fail;
+
+    public  char codeSplit;
 }

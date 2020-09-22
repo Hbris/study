@@ -16,8 +16,8 @@ public class Translate {
 
     private static final String target = "E:\\c";
     private static final String pro = "E:\\文档\\20200911\\后端\\gjh\\java\\messages_zh_CN.properties";
-    private static final String source = "D:\\project\\src\\main\\webapp\\sysapp";
-    //private static final String source = "D:\\project\\src\\main\\webapp\\sysapp\\org\\employee";
+    //private static final String source = "D:\\project\\src\\main\\webapp\\sysapp";
+    private static final String source = "D:\\project\\src\\main\\webapp\\sysapp\\org\\employee";
     //private static final String source = "D:\\project\\src\\main\\webapp\\sysapp\\attachment";
     static Map<String, String> resMap = new HashMap<>();
 
@@ -103,68 +103,69 @@ public class Translate {
         ) {
             String line;
             while ((line = br.readLine()) != null) {
-                String newLine = line;
-                if (line.contains("spring:message")) {
-                    int start = line.indexOf("<spring:message");
-                    int end = line.indexOf("/>", start);
-                    TranslateResult translate = new TranslateResult();
-                    translate.setPath(file.getPath());
+                Map<String, String>  envrep = new HashMap<>();
 
+                //当前行搜索位置
+                int spaStart = 0;
+                while (line.indexOf("spring:message", spaStart) != -1) {
+                    //实体类  导出用
+                    TranslateResult translate = new TranslateResult();
+                    resultList.add(translate);
+                    translate.setPath(file.getPath());
                     translate.setTextLine(line);
 
-                    if (end > -1) {
-                        String target = line.substring(start, end + 2);
+                    //替换内容搜索起始位置
+                    int start = line.indexOf("<spring:message", spaStart);
+                    int end = line.indexOf("/>", start);
+                    spaStart = end +1;
 
-                        target = target.replace(" ", "");
+                    //当前内容有问题,没有结束符
+                    if (end == -1) {
 
-                        //system.out.println("target:"+target);
+                        un.add(line);
+                        break;
+                    }
 
-                        if (target.indexOf("text=") == -1) {
+                    String target = line.substring(start, end + 2);
+                    target = target.replace(" ", "");
+                    //设置文本内容
+                    serachText(target, translate);
 
-                            un.add(line);
-                            bw.write(newLine);
-                            bw.newLine(); //添加换行
-                            continue;
-                        }
-                        int textS = target.indexOf("text=") + 6;
+                    if (translate.getText() == null) {
+                        translate.setFail("没有text");
+                        un.add(line);
+                        continue;
+                    }
 
-                        int textE  = target.indexOf(target.charAt(textS- 1), textS);
-                        String text = target.substring(textS, textE);
-                        translate.setText(text);
-                        //System.out.println("text:"+text);
 
-                        int codeStart = target.indexOf("code=") + 6;
+                    serachCode(line, target, translate);
 
-                        char codeSplit = target.charAt(codeStart- 1);
-                        int codeEnd = target.indexOf(target.charAt(codeStart- 1), codeStart);
-                        //System.out.println(target);
+                    if (translate.getPreCode() == null) {
+                        translate.setFail("没有code");
+                        un.add(line);
+                        continue;
+                    }
 
-                        String code = target.substring(codeStart, codeEnd);
+                    //和code一起替换
+                    int nc = line.indexOf("code", start + 1);
+                    int split1 = line.indexOf(translate.getCodeSplit(),nc);
+                    int split2 = line.indexOf(translate.getCodeSplit(),split1+1);
+                    String p = line.substring(nc,split2 + 1);
 
-                        translate.setPreCode(code);
 
-                        int nc = newLine.indexOf("code", start + 1);
+                    if (resMap.containsKey(translate.getText())) {
+                        translate.setAftCode(resMap.get(translate.getText()));
+                        envrep.put(p, "code = " + translate.getCodeSplit() + resMap.get(translate.getText()) + translate.getCodeSplit());
 
-                        int split1 = newLine.indexOf(codeSplit,nc);
-                        int split2 = newLine.indexOf(codeSplit,split1+1);
-
-                        String p = newLine.substring(nc,split2 + 1);
-                        System.out.println();
-
-                        if (resMap.containsKey(text)) {
-                            translate.setAftCode(resMap.get(text));
-                            newLine = newLine.replace(p, "code = " + codeSplit + resMap.get(text) + codeSplit);
-                        } else {
-                            un.add(line);
-                        }
                     } else {
+                        translate.setFail("没有中文对应的翻译");
                         un.add(line);
                     }
-                    resultList.add(translate);
-
                 }
-                //System.out.println(newLine);
-                bw.write(newLine);
+                for (Map.Entry<String, String> e : envrep.entrySet()) {
+                    line = line.replace(e.getKey(), e.getValue());
+                }
+                bw.write(line);
                 bw.newLine(); //添加换行
             }
         } catch (IOException e) {
@@ -178,7 +179,34 @@ public class Translate {
         }
     }
 
+    static void serachText(String target, TranslateResult translate) {
+        if (target.indexOf("text=") == -1) {
+            return;
+        }
+        int textS = target.indexOf("text=") + 6;
 
+        int textE  = target.indexOf(target.charAt(textS- 1), textS);
+        String text = target.substring(textS, textE);
+        translate.setText(text);
+
+    }
+
+    static void serachCode(String line, String target, TranslateResult translate) {
+
+        int codeStart = target.indexOf("code=") + 6;
+        if (codeStart == 5) {
+            return;
+        }
+
+        char codeSplit = target.charAt(codeStart- 1);
+
+        int codeEnd = target.indexOf(codeSplit, codeStart);
+
+        String code = target.substring(codeStart, codeEnd);
+
+        translate.setPreCode(code);
+        translate.setCodeSplit(codeSplit);
+    }
 
 
 

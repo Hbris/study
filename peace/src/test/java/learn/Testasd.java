@@ -11,67 +11,64 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Testasd {
     @Test
     public void a() throws IOException {
-        String line = "<spring:message code='2223' text = '序号'/>";
-        String newLine = line;
-        int start = line.indexOf("<spring:message");
-        int end = line.indexOf("/>", start);
-        TranslateResult translate = new TranslateResult();
 
-        translate.setTextLine(line);
+        String line = "            {field: 'name', name: '<spring:message code=\"sysapp.org.employee.name\" text=\"名称\"/>', type: 'text', placeholder: '<spring:message code=\"sysapp.org.employee.EnterNameToSearch\" />'},";
+        String newLine = new String(line);
+        int spaStart = 0;
+        Map<String, String>  envrep = new HashMap<>();
+        while (line.indexOf("spring:message", spaStart) != -1) {
+            int start = line.indexOf("<spring:message", spaStart);
+            int end = line.indexOf("/>", start);
 
-        if (end > -1) {
-            String target = line.substring(start, end + 2);
+            spaStart = end +1;
+            if (end > -1) {
+                String target = line.substring(start, end + 2);
+                target = target.replace(" ", "");
+                //system.out.println("target:"+target);
+                if (target.indexOf("text=") == -1) {
+                    System.out.println("fai--text--:" + line);
+                    continue;
+                }
+                int textS = target.indexOf("text=") + 6;
 
-            target = target.replace(" ", "");
+                int textE  = target.indexOf(target.charAt(textS- 1), textS);
+                String text = target.substring(textS, textE);
 
-            //system.out.println("target:"+target);
+                System.out.println("text:"+text);
 
-            if (target.indexOf("text=") == -1) {
+                int codeStart = target.indexOf("code=") + 6;
 
-                return;
-            }
-            int textS = target.indexOf("text=") + 6;
+                char codeSplit = target.charAt(codeStart- 1);
 
-            int textE  = target.indexOf(target.charAt(textS- 1), textS);
-            String text = target.substring(textS, textE);
-            translate.setText(text);
-            //System.out.println("text:"+text);
+                int codeEnd = target.indexOf(codeSplit, codeStart);
 
-            int codeStart = target.indexOf("code=") + 6;
-
-            char codeSplit = target.charAt(codeStart- 1);
-            int codeEnd = target.indexOf(codeSplit, codeStart);
-            //System.out.println(target);
-
-            String code = target.substring(codeStart, codeEnd);
-
-            translate.setPreCode(code);
-
-            boolean flag = true;
-            if (flag) {
-                //if (code.isBlank()) {
-
-
+                String code = target.substring(codeStart, codeEnd);
 
                 int nc = newLine.indexOf("code", start + 1);
-
+//System.out.println(target);
+                if (nc == -1) {
+                    System.out.println(newLine.substring(start));
+                    System.out.println("fai-- code--:" + line);
+                    continue;
+                }
                 int split1 = newLine.indexOf(codeSplit,nc);
                 int split2 = newLine.indexOf(codeSplit,split1+1);
 
                 String p = newLine.substring(nc,split2 + 1);
-                System.out.println(newLine.replace(p, "code = " + codeSplit + "aass11111" + codeSplit));
 
-                //newLine.char
+                envrep.put(p, "code = " + codeSplit + "******" + codeSplit);
 
+            } else {
 
-                flag = false;
+                System.out.println("fai--end--:" + line);
+                break;
             }
-            System.out.println("code:" + code);
-            newLine = newLine.replace(code, "aass11111");
-            System.out.println("newLine:" + newLine);
 
         }
-
+        for (Map.Entry<String, String> e : envrep.entrySet()) {
+            newLine = newLine.replace(e.getKey(), e.getValue());
+        }
+        System.out.println("result:" + newLine);
 
     }
 
