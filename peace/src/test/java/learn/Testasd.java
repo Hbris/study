@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Testasd {
     @Test
@@ -111,6 +113,7 @@ public class Testasd {
 
     }
 
+/*
 
 
     @Test
@@ -179,6 +182,7 @@ public class Testasd {
 
         }
     }
+*/
 
     public void print(BookMake bm, List<List<String>> title) {
         List<String> outText = title.get(bm.title.get());
@@ -224,6 +228,21 @@ public class Testasd {
         System.out.println(title.getAndIncrement());
         title.set(0);
         System.out.println(title.get());
+    }
+
+    @Test
+    public  void checkChinese() {
+        String sequence = "   2340一3j撒ldjgf二2对阿斯顿ff";
+        final String format = "[\u4e00-\u9fa5]+";
+        Pattern pattern = Pattern.compile(format);
+        Matcher matcher = pattern.matcher(sequence);
+
+
+        while (matcher.find()) {
+            System.out.println(matcher.group());
+            System.out.println("成功");
+        }
+
     }
 }
 

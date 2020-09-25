@@ -9,7 +9,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLOutput;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Translate {
 //D:\project\src\main\webapp\sysapp\org\employee\wework\emp_list.jsp
@@ -17,15 +19,24 @@ public class Translate {
     private static final String target = "E:\\c";
     private static final String pro = "E:\\文档\\20200911\\后端\\gjh\\java\\messages_zh_CN.properties";
     //private static final String source = "D:\\project\\src\\main\\webapp\\sysapp";
-    private static final String source = "D:\\project\\src\\main\\webapp\\sysapp\\org\\employee";
+    //private static final String source = "D:\\project\\src\\main\\webapp\\sysapp\\org\\employee";
+
+    //private static final String source = "D:\\project\\src\\main\\webapp\\platform\\sm\\menu_ext";
+    private static final String source = "D:\\project\\src\\main\\webapp\\platform\\sm\\log";
+    //private static final String source = "D:\\project\\src\\main\\webapp\\platform\\sm\\oplog";
     //private static final String source = "D:\\project\\src\\main\\webapp\\sysapp\\attachment";
     static Map<String, String> resMap = new HashMap<>();
 
-    static Map<String, List<String>> waitMap = new HashMap<>();
     static  String[] igrno = {
             };
     static  List igrnoList = Arrays.asList(igrno);
 
+    public static void main(String[] args) {
+        List<TranslateResult> list =  merge();
+        list.stream().filter(t -> t.getFail() != null).map(e -> e.getText()).distinct().forEach(a -> System.out.println(a));
+        excelCreat(list);
+
+    }
 
 
     public static List<TranslateResult> resultList = null;
@@ -57,12 +68,6 @@ public class Translate {
         create(sourceFile, target);
         System.out.println("程序结束");
 
-        //未翻译的数据
-        waitMap.forEach( (k, v) -> {
-            System.out.println("页面：" + k);
-            v.forEach(System.out::println);
-            System.out.println("页面：" + k + "结束");
-        });
         return resultList;
     }
 
@@ -131,14 +136,14 @@ public class Translate {
                     //设置文本内容
                     serachText(target, translate);
 
-                    if (translate.getText() == null) {
+                    if (translate.getText() == null || translate.getText().isBlank()) {
                         translate.setFail("没有text");
                         un.add(line);
                         continue;
                     }
 
 
-                    serachCode(line, target, translate);
+                    serachCode(target, translate);
 
                     if (translate.getPreCode() == null) {
                         translate.setFail("没有code");
@@ -170,13 +175,6 @@ public class Translate {
             }
         } catch (IOException e) {
         }
-        if (!un.isEmpty()  && !igrnoList.contains(file.getName())) {
-            if (waitMap.get(file.getPath()) != null) {
-                waitMap.put(file.getName(), un);
-            }else {
-                waitMap.put(file.getPath(), un);
-            }
-        }
     }
 
     static void serachText(String target, TranslateResult translate) {
@@ -191,7 +189,7 @@ public class Translate {
 
     }
 
-    static void serachCode(String line, String target, TranslateResult translate) {
+    static void serachCode(String target, TranslateResult translate) {
 
         int codeStart = target.indexOf("code=") + 6;
         if (codeStart == 5) {
@@ -224,9 +222,6 @@ public class Translate {
     }
 
 
-    public static void main(String[] args) {
-        List<TranslateResult> list =  merge();
-        excelCreat(list);
-    }
+
 
 }

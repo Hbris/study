@@ -24,10 +24,6 @@ public class DateTest {
         System.out.println(date.compareTo(sixMonth));
     }
 
-    public static void main(String[] args) throws ParseException {
-
-        System.out.println();
-    }
 
     @Test
     public static Calendar getToday() throws ParseException
