@@ -1,11 +1,12 @@
 package learn;
 
-import com.jiang.advances.peace.entity.TranslateResult;
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -244,5 +245,15 @@ public class Testasd {
         }
 
     }
+
+    @Test
+    public  void AS() {
+        AtomicBoolean run = new AtomicBoolean(false);
+
+        System.out.println(run.getAndSet(true));
+        System.out.println(run.get());
+    }
+
+
 }
 
