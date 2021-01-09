@@ -20,4 +20,5 @@ public class TranslateResult {
     public  String fail;
 
     public  char codeSplit;
+
 }
