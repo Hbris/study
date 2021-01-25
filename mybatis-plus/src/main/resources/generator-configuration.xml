@@ -30,20 +30,20 @@
             <property name="forceBigDecimals" value="false"/>
         </javaTypeResolver>
 
-        <javaModelGenerator targetPackage="com.fiberhome.management.langmenu.entity" targetProject=".\src\main\java">
+        <javaModelGenerator targetPackage="com.fiberhome.framework.tableentity" targetProject=".\src\main\java">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
 
-        <sqlMapGenerator targetPackage="mappers" targetProject=".\src\main\resources">
+        <sqlMapGenerator targetPackage="mappers" targetProject="sqlmap\mybatis">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.fiberhome.management.langmenu.mappers"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.fiberhome.framework.tablemappers"
                              targetProject=".\src\main\java">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
-        <table schema="public" tableName="sys_menu_language"/>
+        <table schema="public" tableName="mbs_tenant"/>
     </context>
 </generatorConfiguration>

@@ -1,28 +1,26 @@
 package com.jiang.advances.peace.util;
 
+
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
 import cn.afterturn.easypoi.excel.entity.ExportParams;
-import cn.afterturn.easypoi.excel.entity.ImportParams;
 import com.jiang.advances.peace.entity.TranslateResult;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.sql.SQLOutput;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Translate {
 //D:\project\src\main\webapp\sysapp\org\employee\wework\emp_list.jsp
 
     private static final String target = "E:\\c";
-    private static final String pro = "E:\\文档\\20200911\\后端\\gjh\\java\\messages_zh_CN.properties";
+    private static final String pro = "E:\\文档\\公司文档\\20200911\\gjh\\java\\messages_zh_CN.properties";
     //private static final String source = "D:\\project\\src\\main\\webapp\\sysapp";
     //private static final String source = "D:\\project\\src\\main\\webapp\\sysapp\\org\\employee";
 
     //private static final String source = "D:\\project\\src\\main\\webapp\\platform\\sm\\menu_ext";
-    private static final String source = "D:\\project\\src\\main\\webapp\\platform\\sm\\log";
+    private static final String source = "D:\\project\\src\\main\\webapp\\sysapp\\org\\employee";
     //private static final String source = "D:\\project\\src\\main\\webapp\\platform\\sm\\oplog";
     //private static final String source = "D:\\project\\src\\main\\webapp\\sysapp\\attachment";
     static Map<String, String> resMap = new HashMap<>();
@@ -220,6 +218,7 @@ public class Translate {
             e.printStackTrace();
         }
     }
+
 
 
 

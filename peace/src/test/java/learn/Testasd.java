@@ -439,9 +439,7 @@ public class Testasd {
     @Test
     public void FB(){
 
-        //ServiceLoader<User>
 
-        //ValidatorImpl v = Validation.byProvider(HibernateValidator.class);
     }
 
 
